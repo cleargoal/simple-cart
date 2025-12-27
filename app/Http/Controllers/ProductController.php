@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class ProductController extends Controller
+{
+    /**
+     * Display a listing of products
+     */
+    public function index(): Response
+    {
+        $products = Product::where('stock_quantity', '>', 0)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return Inertia::render('Products/Index', [
+            'products' => $products,
+        ]);
+    }
+
+    /**
+     * Display the specified product
+     */
+    public function show(Product $product): Response
+    {
+        return Inertia::render('Products/Show', [
+            'product' => $product,
+        ]);
+    }
+}
