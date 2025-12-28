@@ -34,4 +34,15 @@ class Money implements CastsAttributes
 
         return (int) round($value * 100);
     }
+
+    /**
+     * Serialize the value for JSON (used by Inertia)
+     * The value is already casted by get(), so just return it
+     *
+     * @param  array<string, mixed>  $attributes
+     */
+    public function serialize(Model $model, string $key, mixed $value, array $attributes): ?float
+    {
+        return $value;
+    }
 }
