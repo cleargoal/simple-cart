@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { ShoppingCart, Trash2, ArrowLeft } from 'lucide-vue-next';
+import { ShoppingCart, Trash2, ArrowLeft, Plus, Minus } from 'lucide-vue-next';
 import { ref } from 'vue';
 import productsRoute from '@/routes/products';
 import cartRoute from '@/routes/cart';
@@ -48,6 +48,20 @@ const updateQuantity = (cartItemId: number) => {
     }, {
         preserveScroll: true,
     });
+};
+
+const incrementQuantity = (item: CartItem) => {
+    if (quantities.value[item.id] < item.product.stock_quantity) {
+        quantities.value[item.id]++;
+        updateQuantity(item.id);
+    }
+};
+
+const decrementQuantity = (item: CartItem) => {
+    if (quantities.value[item.id] > 1) {
+        quantities.value[item.id]--;
+        updateQuantity(item.id);
+    }
 };
 
 const removeItem = (cartItemId: number) => {
@@ -113,14 +127,27 @@ const checkoutHandler = () => {
                                     </div>
 
                                     <div class="flex items-center gap-2">
-                                        <Input
-                                            v-model.number="quantities[item.id]"
-                                            type="number"
-                                            min="1"
-                                            :max="item.product.stock_quantity"
-                                            class="w-20"
-                                            @change="updateQuantity(item.id)"
-                                        />
+                                        <div class="flex items-center gap-1 rounded-md border">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                class="h-8 w-8"
+                                                @click="decrementQuantity(item)"
+                                                :disabled="quantities[item.id] <= 1"
+                                            >
+                                                <Minus class="h-3 w-3" />
+                                            </Button>
+                                            <span class="w-10 text-center text-sm font-medium">{{ quantities[item.id] }}</span>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                class="h-8 w-8"
+                                                @click="incrementQuantity(item)"
+                                                :disabled="quantities[item.id] >= item.product.stock_quantity"
+                                            >
+                                                <Plus class="h-3 w-3" />
+                                            </Button>
+                                        </div>
                                         <Button
                                             variant="ghost"
                                             size="icon"

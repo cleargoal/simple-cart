@@ -13,6 +13,8 @@ class CartItem extends Model
         'quantity',
     ];
 
+    protected $appends = ['subtotal'];
+
     /**
      * Get the user that owns the cart item
      */

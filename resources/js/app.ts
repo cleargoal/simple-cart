@@ -5,6 +5,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { initializeTheme } from './composables/useAppearance';
+import Toaster from './components/ui/toast/Toaster.vue';
+import FlashMessages from './components/FlashMessages.vue';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -16,7 +18,13 @@ createInertiaApp({
             import.meta.glob<DefineComponent>('./pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        createApp({
+            render: () => h('div', [
+                h(App, props),
+                h(Toaster),
+                h(FlashMessages),
+            ])
+        })
             .use(plugin)
             .mount(el);
     },

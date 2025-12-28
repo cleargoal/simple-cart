@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart } from 'lucide-vue-next';
 import productsRoute from '@/routes/products';
 import cart from '@/routes/cart';
+import { computed } from 'vue';
 
 interface Product {
     id: number;
@@ -21,6 +22,9 @@ interface Product {
 defineProps<{
     products: Product[];
 }>();
+
+const page = usePage();
+const cartCount = computed(() => page.props.cartCount as number);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -50,9 +54,12 @@ const addToCart = (productId: number) => {
                     <p class="text-muted-foreground">Browse our collection</p>
                 </div>
                 <Link :href="cart.index().url">
-                    <Button variant="outline">
+                    <Button variant="outline" class="relative">
                         <ShoppingCart class="mr-2 h-4 w-4" />
                         View Cart
+                        <Badge v-if="cartCount > 0" variant="destructive" class="ml-2 h-5 min-w-5 px-1">
+                            {{ cartCount }}
+                        </Badge>
                     </Button>
                 </Link>
             </div>
@@ -81,10 +88,22 @@ const addToCart = (productId: number) => {
                     <CardContent class="flex-1">
                         <div class="flex items-center justify-between">
                             <span class="text-2xl font-bold">${{ product.price.toFixed(2) }}</span>
-                            <Badge v-if="product.stock_quantity < 10" variant="destructive">
+                            <Badge
+                                v-if="product.stock_quantity === 0"
+                                class="bg-red-100 text-red-800 hover:bg-red-100 dark:bg-red-950 dark:text-red-300"
+                            >
+                                Out of Stock
+                            </Badge>
+                            <Badge
+                                v-else-if="product.stock_quantity < 10"
+                                class="bg-orange-100 text-orange-800 hover:bg-orange-100 dark:bg-orange-950 dark:text-orange-300"
+                            >
                                 Low Stock
                             </Badge>
-                            <Badge v-else variant="secondary">
+                            <Badge
+                                v-else
+                                class="bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-950 dark:text-green-300"
+                            >
                                 In Stock
                             </Badge>
                         </div>

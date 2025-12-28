@@ -2,6 +2,8 @@
 
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Jobs\DailySalesReport;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -21,6 +23,10 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+    })
+    ->withSchedule(function (Schedule $schedule): void {
+        // Run daily sales report every day at 8:00 AM
+        $schedule->job(new DailySalesReport())->dailyAt('08:00');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
