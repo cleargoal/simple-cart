@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,8 +26,22 @@ class ProductController extends Controller
     /**
      * Display the specified product
      */
-    public function show(Product $product): Response
+    public function show(Request $request, Product $product): Response
     {
+        // Track recently viewed products in session
+        $recentlyViewed = $request->session()->get('recently_viewed', []);
+
+        // Remove if already exists to avoid duplicates
+        $recentlyViewed = array_diff($recentlyViewed, [$product->id]);
+
+        // Add to the beginning of the array
+        array_unshift($recentlyViewed, $product->id);
+
+        // Keep only last 20 viewed products
+        $recentlyViewed = array_slice($recentlyViewed, 0, 20);
+
+        $request->session()->put('recently_viewed', $recentlyViewed);
+
         return Inertia::render('Products/Show', [
             'product' => $product,
         ]);
