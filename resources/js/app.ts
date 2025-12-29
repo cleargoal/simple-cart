@@ -33,5 +33,14 @@ createInertiaApp({
     },
 });
 
+// Handle CSRF token errors by reloading the page
+document.addEventListener('inertia:error', (event) => {
+    // @ts-ignore
+    if (event.detail.response?.status === 419) {
+        console.warn('CSRF token mismatch. Reloading page to refresh token...');
+        window.location.reload();
+    }
+});
+
 // This will set light / dark mode on page load...
 initializeTheme();
