@@ -115,4 +115,19 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Email Addresses
+    |--------------------------------------------------------------------------
+    |
+    | Email addresses that will receive administrative notifications such as
+    | low stock alerts. Multiple emails can be specified as a comma-separated
+    | list in the ADMIN_EMAILS environment variable.
+    |
+    */
+
+    'admin_emails' => array_filter(
+        array_map('trim', explode(',', env('ADMIN_EMAILS', 'admin@example.com')))
+    ),
+
 ];

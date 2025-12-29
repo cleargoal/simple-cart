@@ -60,7 +60,10 @@ class ProcessCheckout
                 // Decrease stock
                 $cartItem->product->decreaseStock($cartItem->quantity);
 
-                // Check if stock is low and dispatch notification
+                // Refresh to get updated stock_quantity
+                $cartItem->product->refresh();
+
+                // Check if stock is low and dispatch job
                 if ($cartItem->product->isLowStock()) {
                     LowStockNotification::dispatch($cartItem->product);
                 }
