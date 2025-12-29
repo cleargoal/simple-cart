@@ -14,6 +14,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create admin user for notifications
+        User::factory()->withoutTwoFactor()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+        ]);
+
         // Create test user without 2FA
         User::factory()->withoutTwoFactor()->create([
             'name' => 'Test User',

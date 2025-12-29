@@ -25,8 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule): void {
-        // Run daily sales report every day at 8:00 AM
-        $schedule->job(new DailySalesReport())->dailyAt('08:00');
+        // Run daily sales report every evening at 6:00 PM
+        $schedule->job(new DailySalesReport())->dailyAt('18:00');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
