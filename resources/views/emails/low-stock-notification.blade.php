@@ -20,7 +20,7 @@
             border: 1px solid #e5e7eb;
         }
         .header {
-            background-color: #dc2626;
+            background-color: #eaa30c;
             color: white;
             padding: 20px;
             border-radius: 8px 8px 0 0;
@@ -45,7 +45,7 @@
         }
         .stock-info {
             font-size: 18px;
-            color: #dc2626;
+            color: #eaa30c;
             font-weight: 600;
             margin: 15px 0;
         }
