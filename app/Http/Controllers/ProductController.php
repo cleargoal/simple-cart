@@ -15,7 +15,7 @@ class ProductController extends Controller
     {
         $products = Product::where('stock_quantity', '>', 0)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(12);
 
         return Inertia::render('Products/Index', [
             'products' => $products,

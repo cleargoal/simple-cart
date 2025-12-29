@@ -19,8 +19,23 @@ interface Product {
     image_url: string | null;
 }
 
+interface PaginatedProducts {
+    data: Product[];
+    current_page: number;
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+}
+
 defineProps<{
-    products: Product[];
+    products: PaginatedProducts;
 }>();
 
 const page = usePage();
@@ -64,14 +79,14 @@ const addToCart = (productId: number) => {
                 </Link>
             </div>
 
-            <div v-if="products.length === 0" class="flex h-[400px] items-center justify-center rounded-xl border border-dashed">
+            <div v-if="products.data.length === 0" class="flex h-[400px] items-center justify-center rounded-xl border border-dashed">
                 <div class="text-center">
                     <p class="text-muted-foreground">No products available</p>
                 </div>
             </div>
 
             <div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                <Card v-for="product in products" :key="product.id" class="flex flex-col">
+                <Card v-for="product in products.data" :key="product.id" class="flex flex-col">
                     <CardHeader>
                         <div v-if="product.image_url" class="mb-4 aspect-square overflow-hidden rounded-md">
                             <img :src="product.image_url" :alt="product.name" class="h-full w-full object-cover" />
@@ -128,6 +143,31 @@ const addToCart = (productId: number) => {
                         </Button>
                     </CardFooter>
                 </Card>
+            </div>
+
+            <!-- Pagination -->
+            <div v-if="products.last_page > 1" class="flex items-center justify-center gap-4 mt-8">
+                <Link v-if="products.prev_page_url" :href="products.prev_page_url" preserve-scroll>
+                    <Button variant="outline">
+                        Previous
+                    </Button>
+                </Link>
+                <Button v-else variant="outline" disabled>
+                    Previous
+                </Button>
+
+                <span class="text-sm text-muted-foreground">
+                    Page {{ products.current_page }} of {{ products.last_page }}
+                </span>
+
+                <Link v-if="products.next_page_url" :href="products.next_page_url" preserve-scroll>
+                    <Button variant="outline">
+                        Next
+                    </Button>
+                </Link>
+                <Button v-else variant="outline" disabled>
+                    Next
+                </Button>
             </div>
         </div>
     </AppLayout>
